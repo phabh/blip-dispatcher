@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <script src="csv.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+        <script>
+            $( function () {
+    
+                $.ajax("csv.txt",
+                        {
+                            success : function (data, stats, xhr) {
+                                $('#input').text(data);
+                            }
+                        })
+                        .pipe( CSV.parse )
+                        .done( function(rows) {
+                            table("#table", rows );
+                            console.log(rows);
+                            $('#out')
+                                    .addClass("prettyprint")
+                                    .text( JSON.stringify(rows, null, " ") );
+                            window.prettyPrint()
+                        });
+    
+                // dump to html for visualizing output
+                function table (el, data){
+                    var t = $("<table  />").appendTo( el );
+                    var row, value, tr, td, span, j, i;
+                    for( i = 0; i < data.length; i++ ) {
+                        row = data[i];
+                        tr = $("<tr/>").appendTo(t);
+                        for( j = 0; j < row.length; j++ ) {
+                            td = $("<td />")
+                                    .appendTo(tr);
+                            span = $('<span />')
+                                    .appendTo(td)
+                                    .text( String(row[j]) );
+                        }
+                    }
+                }
+    
+            })
+        </script>        
+    </head>
+    <body>
+        <form action="#">
+            <input type="file" name="csv_file" />
+            <input type="text" name="separator" />
+            <textarea name="contact_parse"></textarea>
+            <input type="submit" value="Enviar"/>
+        </form>
+    </body>
+</html>
